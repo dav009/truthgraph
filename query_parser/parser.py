@@ -47,15 +47,20 @@ class QueryParser(spark.GenericParser):
 		'''property ::= MID_PROPERTY '''
 		return ('property', p[0])
 
+	def p_multiword0(self, p):
+		'''multiword ::= STRING
+		'''
+		return ('multiword', p[0])
+
 	def p_multiword1(self, p):
-		'''multiword ::= STRING 
+		'''multiword ::= IS_KEYWORD
 		'''
 		return ('multiword', p[0])
 
 	def p_multiword2(self, p):
 		'''multiword ::= multiword STRING
 		'''
-		return (p[0],p[1])
+		return ('multiword',p[0][1],p[1])
 
 	def p_constraint1(self, p):
 		'''constraint ::= property IS_KEYWORD QUOTE multiword QUOTE
@@ -65,7 +70,7 @@ class QueryParser(spark.GenericParser):
 	def p_constraint2(self, p):
 		'''constraint ::= constraint OPERATOR constraint
 		'''
-		return ('constraint'(p[0], ('operator', p[1]), p[2] ))
+		return ('constraint',(p[0], ('operator', p[1]), p[2] ))
 
 	def p_type_expression1(self, p):
 		'''type_expression ::= type
