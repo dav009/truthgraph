@@ -70,7 +70,7 @@ class QueryParser(spark.GenericParser):
 	def p_constraint2(self, p):
 		'''constraint ::= constraint OPERATOR constraint
 		'''
-		return ('constraint',(p[0], ('operator', p[1]), p[2] ))
+		return ('constraints',(p[0], ('operator', p[1]), p[2] ))
 
 	def p_type_expression1(self, p):
 		'''type_expression ::= type
