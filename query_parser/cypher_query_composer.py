@@ -17,6 +17,7 @@ class RelationConstraint:
     def constraint_to_match_header(self):
         return self.constraint_definition['node1']+"<-[:"+self.constraint_definition['relation']+"]-"+self.constraint_definition['node2']
 
+
 class CypherQueryComposer:
 
     """

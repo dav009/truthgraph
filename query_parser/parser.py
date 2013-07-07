@@ -16,7 +16,7 @@ class QueryParser(spark.GenericParser):
 		'''
 		expression ::= expression OPERATOR multiword simple_expression
 		'''
-		return (p[0], ('operator', p[1]), ('verb', p[2] ), p[3])
+		return ('composed_expr', p[0], ('operator', p[1]), ('verb', p[2] ), p[3])
 
 	def p_type(self,p):
 		'''type ::= NODE_KEYWORD
@@ -75,12 +75,12 @@ class QueryParser(spark.GenericParser):
 	def p_type_expression1(self, p):
 		'''type_expression ::= type
 		'''
-		return ('type_expr', {'type':p[0]} )
+		return ('type_expr_no_constraints', {'type':p[0]} )
 
 	def p_type_expression2(self, p):
 		'''type_expression ::= type WHOSE_KEYWORD constraint 
 		'''
-		return ('type_expr', {'type':p[0], 'constraints':p[2]})
+		return ('type_expr_constraints', {'type':p[0], 'constraints':p[2]})
 
 	def p_node_expression(self, p):
 		'''node_expression ::= COLON NUMBER
