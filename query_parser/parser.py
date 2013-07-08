@@ -1,5 +1,4 @@
 import spark.spark as spark
-from spark.ast import AST
 
 class QueryParser(spark.GenericParser):
 	def __init__(self, start='expression'):
@@ -37,30 +36,30 @@ class QueryParser(spark.GenericParser):
 
 	def p_property(self, p):
 		'''property ::= NAME_PROPERTY'''
-		return ('property', p[0])
+		return ('property', p[0].attr)
 
 	def p_property2(self, p):
 		'''property ::=  ENID_PROPERTY'''
-		return ('property', p[0])
+		return ('property', p[0].attr)
 
 	def p_property3(self, p):
 		'''property ::= MID_PROPERTY '''
-		return ('property', p[0])
+		return ('property', p[0].attr)
 
 	def p_multiword0(self, p):
 		'''multiword ::= STRING
 		'''
-		return ('multiword', p[0])
+		return ('multiword', p[0].attr)
 
 	def p_multiword1(self, p):
 		'''multiword ::= IS_KEYWORD
 		'''
-		return ('multiword', p[0])
+		return ('multiword', p[0].attr)
 
 	def p_multiword2(self, p):
 		'''multiword ::= multiword STRING
 		'''
-		return ('multiword',p[0][1],p[1])
+		return ('multiword',p[0][1]+' '+p[1].attr)
 
 	def p_constraint1(self, p):
 		'''constraint ::= property IS_KEYWORD QUOTE multiword QUOTE

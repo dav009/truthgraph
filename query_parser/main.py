@@ -2,7 +2,8 @@ from tokenizer import Tokenizer
 from parser import QueryParser
 from semantic_parser import QuerySemanticParser
 data = "people whose name is \"david alejandro\" and lives in place whose name is \"the united states\""
-data = ":123"
+#data = "people whose name is \"david alejandro\""
+#data = ":123"
 #data = "node"
 def analyze(string):
     scanner = Tokenizer()

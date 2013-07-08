@@ -46,7 +46,7 @@ class Tokenizer(spark.GenericScanner):
 		self.rv.append(Token(type="QUOTE"))
 
 	def t_keyword(self, s):
-	    self.rv.append(Token(type=self.keywords[s]))
+	    self.rv.append(Token(type=self.keywords[s], attr=s))
 
 	def t_STRING(self, s):
 		r' [a-zA-Z0-9_]+ '
