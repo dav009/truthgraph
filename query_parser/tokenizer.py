@@ -35,7 +35,7 @@ class Tokenizer(spark.GenericScanner):
 	def t_NUMBER(self, s):
 		r'[0-9]+'
 		print "called"
-		self.rv.append(Token(type="NUMBER", attr="NUMBER"))
+		self.rv.append(Token(type="NUMBER", attr=s))
 
 	def t_COLON(self, s):
 		r' \: '

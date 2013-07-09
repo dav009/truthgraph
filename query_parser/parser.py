@@ -15,7 +15,7 @@ class QueryParser(spark.GenericParser):
 		'''
 		expression ::= expression OPERATOR multiword simple_expression
 		'''
-		return ('composed_expr', p[0], ('operator', p[1]), ('verb', p[2] ), p[3])
+		return ('composed_expr', {'expression1':p[0], 'operator':p[1], 'verb':p[2], 'expression2':p[3]} )
 
 	def p_type(self,p):
 		'''type ::= NODE_KEYWORD
@@ -36,15 +36,15 @@ class QueryParser(spark.GenericParser):
 
 	def p_property(self, p):
 		'''property ::= NAME_PROPERTY'''
-		return ('property', p[0].attr)
+		return ('property', p[0])
 
 	def p_property2(self, p):
 		'''property ::=  ENID_PROPERTY'''
-		return ('property', p[0].attr)
+		return ('property', p[0])
 
 	def p_property3(self, p):
 		'''property ::= MID_PROPERTY '''
-		return ('property', p[0].attr)
+		return ('property', p[0])
 
 	def p_multiword0(self, p):
 		'''multiword ::= STRING
@@ -64,12 +64,12 @@ class QueryParser(spark.GenericParser):
 	def p_constraint1(self, p):
 		'''constraint ::= property IS_KEYWORD QUOTE multiword QUOTE
 		'''
-		return ('constraint', ('property', p[0], p[3]) )
+		return ('constraint', {'property':p[0], 'value':p[3]} )
 
 	def p_constraint2(self, p):
 		'''constraint ::= constraint OPERATOR constraint
 		'''
-		return ('constraints',(p[0], ('operator', p[1]), p[2] ))
+		return ('constraints',{"first":p[0],'operator':p[1], "second":p[2] })
 
 	def p_type_expression1(self, p):
 		'''type_expression ::= type

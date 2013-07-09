@@ -4,9 +4,15 @@ class NodeConstraint:
         self.constraint_definition = constraint_definition
 
     def constraint_to_start_header(self):
-        return self.constraint_definition['node']+" = node:node_auto_index"+"("+self.constraint_definition['property']+"=\""+self.constraint_definition['value']+"\")"
-
+        if self.constraint_definition['property']=="__ANY__" and self.constraint_definition['value']=="__ANY__":
+            return self.constraint_definition['node']+" = node(*)"
+        elif  self.constraint_definition['property']=="__ID__":
+            return self.constraint_definition['node']+" = node"+"("+self.constraint_definition['value']+")"
+        else:
+            return self.constraint_definition['node']+" = node:node_auto_index"+"("+self.constraint_definition['property']+"=\""+self.constraint_definition['value']+"\")"
+            
     def constraint_to_where_header(self):
+        print self.constraint_definition
         return self.constraint_definition['node']+"."+self.constraint_definition['property']+"=\""+self.constraint_definition['value']+"\""
 
 class RelationConstraint:
@@ -15,7 +21,13 @@ class RelationConstraint:
         self.constraint_definition = constraint_definition
 
     def constraint_to_match_header(self):
-        return self.constraint_definition['node1']+"<-[:"+self.constraint_definition['relation']+"]-"+self.constraint_definition['node2']
+        left_direction= ''
+        right_direction =''
+        if self.constraint_definition['direction'] == 'left' or self.constraint_definition['direction']=='both':
+            left_direction = "<"
+        if self.constraint_definition['direction'] == 'right' or self.constraint_definition['direction']=='both':
+            right_direction = ">"
+        return self.constraint_definition['node1']+left_direction+"-[:"+self.constraint_definition['relation']+"]-"+right_direction+self.constraint_definition['node2']
 
 
 class CypherQueryComposer:
@@ -27,6 +39,7 @@ RETURN target
     """
     def __init__(self, list_of_indexed_properties=['mid','enid','name']):
         self.list_of_indexed_properties = list_of_indexed_properties
+        self.list_of_indexed_properties.append('__ID__')
         self.start_query = dict()
         self.match_query = list()
         self.where_query = list()
@@ -43,6 +56,12 @@ RETURN target
             self.start_query[node_query_identifier] = constraint_dictionary
         else:
             self.where_query.append(constraint_dictionary)
+
+    def setNodeID(self, node_query_identifier, neo4j_id):
+        self.addNodePropertyConstraints(node_query_identifier, "__ID__", neo4j_id)
+
+    def setNodeAsAny(self, node_query_identifier):
+        self.addNodePropertyConstraints(self, node_query_identifier, "__ANY__", "__ANY__")
 
     def addRelationConstraint(self, node_query_id1,relation_type, node_query_id2, direction):
         self.match_query.append(RelationConstraint({"node1":node_query_id1, "node2":node_query_id2, "relation":relation_type, "direction":direction}))
